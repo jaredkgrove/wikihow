@@ -1,4 +1,4 @@
-# Wikihow HELLO WORLD
+# Wikihow
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/wikihow`. To experiment with that code, run `bin/console` for an interactive prompt.
 
@@ -41,3 +41,12 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the Wikihow project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/'immutable-founder-5073'/wikihow/blob/master/CODE_OF_CONDUCT.md).
+
+## Project Notes
+
+What website will you be scraping? wikihow.com
+What will you need to do with the data you return from scraping? create category instances (should I create topic classes right away or after user selection?)
+What classes will you be using? Scraper class (separate scraper classes for main page, category page, and topic page?), cli class, category class, topic class
+What will be the flow of displaying data for your application. ex How will your CLI portion work. Ask user to select a category. Scrape category page for how-to topics, ask user to select topic. Scrape topic page for methods. Ask user to select method. Show Method steps to user.
+How will you display data one level deep to the user?
+What will need to be in your README file? An explanation of how to use the program?
