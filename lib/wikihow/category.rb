@@ -1,16 +1,31 @@
 class Wikihow::Category
-  attr_accessor :name, :url, :topics
-  def self.display
-    category_1 = self.new
-    category_1.name = "Arts & Crafts"
-    category_1.url = "website.com/arts&crafts"
-    #category_1.topics = [topic_1, topic_2]
+  attr_accessor :title, :url, :topics
+  @@all = []
+  def initialize(category_hash)
+    @title = category_hash[:title]
+    @url = category_hash[:url]
+    @topics = []
+  end
 
-    category_2 = self.new
-    category_2.name = "Sports"
-    category_2.url = "website.com/sports"
-    #category_2.topics = [topic_11, topic_22]
+  def self.all
+    @@all
+  end
 
-    [category_1, category_2]
+  def self.get_or_create_categories
+    if self.all = []
+      self.scrape_categories
+    end
+    @@all
+  end
+
+  def self.scrape_categories
+    doc = Nokogiri::HTML(open("https://www.wikihow.com/Main-Page"))
+    categories_array = []
+    doc.search("#hp_categories a").each do |category|
+      title = category.text
+      url = category.attr("href")
+      categories_array << {:title => title,:url => url}
+    end
+    categories_array
   end
 end

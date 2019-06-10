@@ -11,7 +11,7 @@ class Wikihow::CLI
   def list_categories
     #get categories
     @categories = Wikihow::Category.display
-    @categories.each.with_index(1) {|category, i| puts "#{i}. #{category.name}"}
+    @categories.each.with_index(1) {|category, i| puts "#{i}. #{category.title}"}
   end
 
   def menu
@@ -21,7 +21,7 @@ class Wikihow::CLI
       puts "Enter the number of the category that you'd like to learn about. Type 'list' to display categories. Type 'exit' to close."
       input = gets.strip.downcase
       if input.to_i > 0
-        puts @categories[input.to_i - 1].name
+        puts @categories[input.to_i - 1].title
       elsif input == "list"
         list_categories
       else
