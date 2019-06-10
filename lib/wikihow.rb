@@ -1,6 +1,3 @@
-require "wikihow/version"
-
-module Wikihow
-  class Error < StandardError; end
-  # Your code goes here...
-end
+require_relative './wikihow/version'
+require_relative './wikihow/cli'
+require_relative './wikihow/category'
