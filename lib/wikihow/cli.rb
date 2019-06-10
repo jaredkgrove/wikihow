@@ -4,7 +4,7 @@ class Wikihow::CLI
   def call
     puts "Welcome to Wikihow"
     list_categories
-    menu
+    categories_menu
     good_bye
   end
 
@@ -20,13 +20,17 @@ class Wikihow::CLI
       puts "Enter the number of the category that you'd like to learn about. Type 'list' to display categories. Type 'exit' to close."
       input = gets.strip.downcase
       if input.to_i > 0 && input.to_i <= @categories.count
-        puts @categories[input.to_i - 1].title
+        topics_menu(@categories[input.to_i - 1])
       elsif input == "list"
         list_categories
       else
         puts "Please enter a valid command."
       end
     end
+  end
+
+  def topics_menu(category)
+    Topic.get_or_create_from_category(category)
   end
 
   def good_bye
