@@ -5,6 +5,7 @@ class Wikihow::Category
     @title = category_hash[:title]
     @url = category_hash[:url]
     @topics = []
+    self.class.all << self
   end
 
   def self.all
@@ -12,10 +13,12 @@ class Wikihow::Category
   end
 
   def self.get_or_create_categories
-    if self.all = []
-      self.scrape_categories
+    if self.all == []
+      categories = self.scrape_categories
+      categories.each{|category| self.new(category)}
     end
-    @@all
+    #binding.pry
+    self.all
   end
 
   def self.scrape_categories

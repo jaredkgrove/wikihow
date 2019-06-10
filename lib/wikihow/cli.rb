@@ -1,6 +1,6 @@
 #CLI Controller
 class Wikihow::CLI
-  @category
+
   def call
     puts "Welcome to Wikihow"
     list_categories
@@ -10,17 +10,16 @@ class Wikihow::CLI
 
   def list_categories
     #get categories
-    @categories = Wikihow::Category.display
+    @categories = Wikihow::Category.get_or_create_categories
     @categories.each.with_index(1) {|category, i| puts "#{i}. #{category.title}"}
   end
 
-  def menu
-
+  def categories_menu
     input = nil
     while input != "exit"
       puts "Enter the number of the category that you'd like to learn about. Type 'list' to display categories. Type 'exit' to close."
       input = gets.strip.downcase
-      if input.to_i > 0
+      if input.to_i > 0 && input.to_i <= @categories.count
         puts @categories[input.to_i - 1].title
       elsif input == "list"
         list_categories
