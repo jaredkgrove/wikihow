@@ -33,7 +33,7 @@ class Wikihow::CLI
   end
 
   def list_topics(category, start_index = 0)
-    @topics = Wikihow::Topic.get_or_create_from_category(category)
+    @topics = Wikihow::Topic.get_or_create_topics_from_category(category)
     if start_index < (@topics.count - 1)
       @topics[start_index..start_index + 9].each.with_index(start_index + 1) {|topic, i| puts "#{i}. #{topic.title}"}
       start_index + 9
@@ -51,7 +51,7 @@ class Wikihow::CLI
       puts "Enter the number of the topic that you'd like to learn how to do. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit."
       input = gets.strip.downcase
       if input.to_i > 0 && input.to_i <= @topics.count
-          #dislplay_topic
+          dislplay_topic(@topics[input.to_i - 1])
       elsif input == "next"
           display_index = list_topics(category, display_index)
       elsif input == "cat"
@@ -60,6 +60,11 @@ class Wikihow::CLI
         input = "exit"
       end
     end
+  end
+
+  def dislplay_topic(topic)
+
+    puts topic.steps
   end
 
   def good_bye
