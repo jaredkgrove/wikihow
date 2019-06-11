@@ -20,7 +20,10 @@ class Wikihow::CLI
       puts "Enter the number of the category that you'd like to learn about. Type 'list' to display categories. Type 'exit' to close."
       input = gets.strip.downcase
       if input.to_i > 0 && input.to_i <= @categories.count
-        topics_menu(@categories[input.to_i - 1])
+        category = @categories[input.to_i - 1]
+        list_topics(category)
+        topics_menu(category)
+        input = "exit"
       elsif input == "list"
         list_categories
       else
@@ -29,8 +32,28 @@ class Wikihow::CLI
     end
   end
 
+  def list_topics(category, start_index = 0)
+    @topics = Wikihow::Topic.get_or_create_from_category(category)
+    @topics[start_index..start_index + 9].each.with_index(1) do |topic, i|
+      puts "#{i}. #{topic.title}"
+    end
+  end
+
   def topics_menu(category)
-    Wikihow::Topic.get_or_create_from_category(category)
+    input = nil
+    while input != "exit"
+      puts "Enter the number of the topic that you'd like to learn how to do. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit."
+      input = gets.strip.downcase
+      if input.to_i > 0 && input.to_i <= @topics.count
+          #dislplay_topic
+      elsif input == "next"
+        list_topics(category, 10)
+      elsif input == "cat"
+        list_categories
+        categories_menu
+        input = "exit"
+      end
+    end
   end
 
   def good_bye

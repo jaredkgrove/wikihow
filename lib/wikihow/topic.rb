@@ -25,9 +25,9 @@ class Wikihow::Topic
     doc = Nokogiri::HTML(open("https://www.wikihow.com" + category.url))
     topics_array = []
     doc.search("#cat_container #cat_all a").each do |topic|
-      title = topic.search("span").text
+      title = topic.search("span").text.strip
       url = topic.attr("href")
-      topics_array << {:title => title,:url => url}
+      topics_array << {:title => title,:url => url} if title != ""
     end
     topics_array
   end
