@@ -18,11 +18,11 @@ class Wikihow::Topic
     doc = Nokogiri::HTML(open("https://www.wikihow.com" + self.url))
     topics_array = []
     binding.pry
-    # doc.search("#hp_categories a").each do |category|
-    #   title = category.text
-    #   url = category.attr("href")
-    #   categories_array << {:title => title,:url => url}
-    # end
+    doc.search("#hp_categories a").each do |category|
+      title = category.text
+      url = category.attr("href")
+      topics_array << {:title => title,:url => url}
+    end
     topics_array
   end
 end
