@@ -34,20 +34,26 @@ class Wikihow::CLI
 
   def list_topics(category, start_index = 0)
     @topics = Wikihow::Topic.get_or_create_from_category(category)
-    @topics[start_index..start_index + 9].each.with_index(1) do |topic, i|
-      puts "#{i}. #{topic.title}"
+    if start_index < (@topics.count - 1)
+      @topics[start_index..start_index + 9].each.with_index(start_index + 1) {|topic, i| puts "#{i}. #{topic.title}"}
+      start_index + 9
+    else
+      puts "Those are all the topics for this category. Would you like to start from the top of the list? Y/N"
+      input = gets.strip.downcase
+      start_index = list_topics(category) if input =="y"
     end
   end
 
   def topics_menu(category)
     input = nil
+    display_index = 9
     while input != "exit"
       puts "Enter the number of the topic that you'd like to learn how to do. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit."
       input = gets.strip.downcase
       if input.to_i > 0 && input.to_i <= @topics.count
           #dislplay_topic
       elsif input == "next"
-        list_topics(category, 10)
+          display_index = list_topics(category, display_index)
       elsif input == "cat"
         list_categories
         categories_menu
