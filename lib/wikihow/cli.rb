@@ -30,7 +30,7 @@ class Wikihow::CLI
   end
 
   def topics_menu(category)
-    Topic.get_or_create_from_category(category)
+    Wikihow::Topic.get_or_create_from_category(category)
   end
 
   def good_bye

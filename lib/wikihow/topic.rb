@@ -15,14 +15,14 @@ class Wikihow::Topic
   end
 
   def self.scrape_for_topics(category)
-    doc = Nokogiri::HTML(open("https://www.wikihow.com" + self.url))
+    doc = Nokogiri::HTML(open("https://www.wikihow.com" + category.url))
     topics_array = []
-    binding.pry
-    doc.search("#hp_categories a").each do |category|
-      title = category.text
-      url = category.attr("href")
+    doc.search("#cat_container #cat_all a").each do |topic|
+      title = topic.search("span").text
+      url = topic.attr("href")
       topics_array << {:title => title,:url => url}
     end
+    binding.pry
     topics_array
   end
 end
