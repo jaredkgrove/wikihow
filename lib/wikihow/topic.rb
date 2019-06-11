@@ -1,17 +1,24 @@
 class Wikihow::Topic
   attr_accessor :sections, :url, :title
+  attr_reader :category
 
-  def initialize(topic_hash)
-    self.title = topic_hash[:title]
+  def initialize(topic_hash = nil, category = nil)
+    self.title = topic_hash[:title] if topic_hash != nil
+    self.url = topic_hash[:url] if topic_hash != nil
+    self.category = category if category != nil
     self.sections = {}
+  end
+
+  def category=(category)
+    @category = category
+    category.add_topic(self)
   end
 
   def self.get_or_create_from_category(category)
     if category.topics == []
-      self.scrape_for_topics(category)
-
-      category.topics << topic
+      self.scrape_for_topics(category).each{|topic_hash|self.new(topic_hash, category)}
     end
+    category.topics
   end
 
   def self.scrape_for_topics(category)
@@ -22,7 +29,6 @@ class Wikihow::Topic
       url = topic.attr("href")
       topics_array << {:title => title,:url => url}
     end
-    binding.pry
     topics_array
   end
 end

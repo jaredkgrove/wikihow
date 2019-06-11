@@ -2,30 +2,15 @@ class Wikihow::Category
   attr_accessor :title, :url, :topics
   @@all = []
   def initialize(category_hash)
-    @title = category_hash[:title]
-    @url = category_hash[:url]
-    @topics = []
+    self.title = category_hash[:title]
+    self.url = category_hash[:url]
+    self.topics = []
     self.class.all << self
   end
 
-  # def get_or_create_topics
-  #   if self.topics == []
-  #     self.scrape_for_topics
-  #   end
-  #   self.topics
-  # end
-
-  # def scrape_for_topics
-  #   doc = Nokogiri::HTML(open("https://www.wikihow.com" + self.url))
-  #   topics_array = []
-  #   binding.pry
-  #   # doc.search("#hp_categories a").each do |category|
-  #   #   title = category.text
-  #   #   url = category.attr("href")
-  #   #   categories_array << {:title => title,:url => url}
-  #   # end
-  #   topics_array
-  # end
+  def add_topic(topic)
+    self.topics << topic
+  end
 
   def self.all
     @@all
