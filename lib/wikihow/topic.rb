@@ -6,7 +6,6 @@ class Wikihow::Topic
     self.url = topic_hash[:url] if topic_hash != nil
     self.category = category if category != nil
     self.sections = []
-    @steps = []
   end
 
   def category=(category)

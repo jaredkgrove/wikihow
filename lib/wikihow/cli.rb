@@ -1,6 +1,9 @@
 #CLI Controller
 class Wikihow::CLI
-
+  @@red = 31
+  @@green = 32
+  @@yellow = 33
+  @@blue = 34
   def call
     puts "Welcome to Wikihow"
     list_categories
@@ -9,7 +12,6 @@ class Wikihow::CLI
   end
 
   def list_categories
-    #get categories
     @categories = Wikihow::Category.get_or_create_categories
     @categories.each.with_index(1) {|category, i| puts "#{i}. #{category.title}"}
   end
@@ -67,7 +69,10 @@ class Wikihow::CLI
   def list_sections(topic)
     if topic.sections.count == 1
       #display_section(topic.sections[0])
+      puts "How to #{topic.title}"
+      puts topic.intro
     else
+      puts topic.intro
       topic.sections.each.with_index(1) {|section, i|puts "#{i}. #{section[:section_title]}"}
     end
   end
@@ -78,7 +83,7 @@ class Wikihow::CLI
     else
       input = nil
       while input != "exit"
-        puts "Enter the number of the method you'd like to learn about. Type 'topic' to return to Topics menu. Type 'exit' to quit"
+        puts "Enter the number of the section/method you'd like to learn about. Type 'topic' to return to Topics menu. Type 'exit' to quit"
         input = gets.strip.downcase
         if input.to_i > 0 && input.to_i <= topic.sections.count
           display_section(topic.sections[input.to_i - 1])
@@ -93,21 +98,19 @@ class Wikihow::CLI
   end
 
   def display_section(section)
-    # section[:section_steps].each.with_index(1) do |step_description, step_number|
-    #   display_step(step_description, step_number)
-    # end
-
      step_number = 1
      input = nil
      while input != "exit" && step_number <= section[:section_steps].count
          step_description = section[:section_steps][step_number - 1]
          list_step(step_description, step_number)
-         puts "Press enter for next step. Type 'exit' to quit."
-         input = gets.strip.downcase
-         puts "Those are all the steps!" if step_number = section[:section_steps].count
+         if step_number == section[:section_steps].count
+           puts "Those are all the steps!"
+         else
+           puts "Press enter for next step. Type 'exit' to view sections/methods."
+           input = gets.strip.downcase
+        end
          step_number += 1
      end
-
   end
 
   def list_step(step_description, step_number)
@@ -118,17 +121,22 @@ class Wikihow::CLI
 
   def display_first_layer_list(layer_1)
     layer_1.each do |layer_2|
-      (layer_2.is_a? Array) ? display_second_layer_list(layer_2) : puts("\n\e[#{32}m  > #{layer_2}\e[0m \n")
+      (layer_2.is_a? Array) ? display_second_layer_list(layer_2) : puts("\n >#{color_text(layer_2,@@green)}\n")
     end
   end
 
   def display_second_layer_list(layer_2)
     layer_2.each do |layer_3|
-      puts("\n\e[#{34}m   >> #{layer_3}\e[0m \n")
+      puts("\n    >>#{color_text(layer_3,@@blue)}\n")
     end
   end
 
   def good_bye
     puts "Goodbye!"
   end
+
+  def color_text(text, color)
+    "\e[#{color}m#{text}\e[0m"
+  end
+
 end
