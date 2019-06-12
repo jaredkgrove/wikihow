@@ -48,12 +48,14 @@ class Wikihow::CLI
     input = nil
     display_index = 9
     while input != "exit"
-      puts "Enter the number of the topic that you'd like to learn how to do. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit."
+      puts "Enter the number of the topic that you'd like to learn about. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit."
       input = gets.strip.downcase
       if input.to_i > 0 && input.to_i <= category.topics.count
-          sections_menu(category.topics[input.to_i - 1])
+        topic = category.topics[input.to_i - 1]
+        list_sections(topic)
+        sections_menu(topic)
       elsif input == "next"
-          display_index = list_topics(category, display_index)
+        display_index = list_topics(category, display_index)
       elsif input == "cat"
         list_categories
         categories_menu
@@ -62,12 +64,23 @@ class Wikihow::CLI
     end
   end
 
+  def list_sections(topic)
+    if topic.sections.count == 1
+      #display_section(topic.sections[0])
+    else
+      puts "Enter the number of the method you'd like to learn about."
+      topic.sections.each.with_index(1) {|section, i|puts "#{i}. #{section[:section_title]}"}
+    end
+  end
+
   def sections_menu(topic)
-    puts "Enter the number of the method you'd like to learn about."
-    topic.sections.each.with_index(1) {|section, i|puts "#{i}. #{section[:section_title]}"}
-    input = gets.strip.downcase
-    if input.to_i > 0 && input.to_i <= topic.sections.count
-      display_section(topic.sections[input.to_i - 1])
+    if topic.sections.count == 1
+      display_section(topic.sections[0])
+    else
+      input = gets.strip.downcase
+      if input.to_i > 0 && input.to_i <= topic.sections.count
+        display_section(topic.sections[input.to_i - 1])
+      end
     end
   end
 
@@ -75,6 +88,13 @@ class Wikihow::CLI
     section[:section_steps].each.with_index(1) do |step_description, step_number|
       display_step(step_description, step_number)
     end
+
+    step_number = 1
+    while input != "exit" && step_number <= section[:section_steps].count
+      display_step(step_description, step_number)
+      puts "Press enter for next step. Type  Type 'exit' to quit."
+    end
+
   end
 
   def display_step(step_description, step_number)
@@ -85,12 +105,14 @@ class Wikihow::CLI
 
   def display_first_layer_list(layer_1)
     layer_1.each do |layer_2|
-      (layer_2.is_a? Array) ? display_second_layer_list(layer_2) : puts("\n\e[#{31}m#{self}\e[0m #{layer_2}\n")
+      (layer_2.is_a? Array) ? display_second_layer_list(layer_2) : puts("\n\e[#{32}m  > #{layer_2}\e[0m \n")
     end
   end
 
   def display_second_layer_list(layer_2)
-
+    layer_2.each do |layer_3|
+      puts("\n\e[#{34}m   >> #{layer_3}\e[0m \n")
+    end
   end
 
   def good_bye
