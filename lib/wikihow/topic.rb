@@ -38,7 +38,7 @@ class Wikihow::Topic
       doc.search(".steps_list_2")[i].search(".step").each do |section_li|
         step_description = [section_li.search(".whb").text.strip + " " + section_li.search("> text()").text.strip]
         section_li.search("> ul > li").each do |step_li|
-          bullet_point = [step_li.search("> text()").text.strip]
+          bullet_point = [step_li.search("> text(), a").text.strip]
           sub_bullet_point = step_li.search("> ul > li").collect {|bullet_point_li|bullet_point_li.search("> text()").text.strip}
           bullet_point << sub_bullet_point if sub_bullet_point !=[]
           step_description << bullet_point if bullet_point != []

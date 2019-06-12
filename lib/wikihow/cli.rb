@@ -38,9 +38,8 @@ class Wikihow::CLI
       @topics[start_index..start_index + 9].each.with_index(start_index + 1) {|topic, i| puts "#{i}. #{topic.title}"}
       start_index + 9
     else
-      puts "Those are all the topics for this category. Would you like to start from the top of the list? Y/N"
-      input = gets.strip.downcase
-      start_index = list_topics(category) if input =="y"
+      puts "Those are all the topics for this category. Here are the first ten topic for the category."
+      list_topics(category)
     end
   end
 
@@ -54,6 +53,7 @@ class Wikihow::CLI
         topic = category.topics[input.to_i - 1]
         list_sections(topic)
         sections_menu(topic)
+        input = 'exit'
       elsif input == "next"
         display_index = list_topics(category, display_index)
       elsif input == "cat"
@@ -76,6 +76,7 @@ class Wikihow::CLI
     if topic.sections.count == 1
       display_section(topic.sections[0])
     else
+      input = nil
       while input != "exit"
         puts "Enter the number of the method you'd like to learn about. Type 'topic' to return to Topics menu. Type 'exit' to quit"
         input = gets.strip.downcase
@@ -91,15 +92,18 @@ class Wikihow::CLI
   end
 
   def display_section(section)
-    section[:section_steps].each.with_index(1) do |step_description, step_number|
-      display_step(step_description, step_number)
-    end
+    # section[:section_steps].each.with_index(1) do |step_description, step_number|
+    #   display_step(step_description, step_number)
+    # end
 
-    step_number = 1
-    while input != "exit" && step_number <= section[:section_steps].count
-      display_step(step_description, step_number)
-      puts "Press enter for next step. Type  Type 'exit' to quit."
-    end
+     step_number = 1
+     input = nil
+     while input != "exit" && step_number <= section[:section_steps].count
+         step_description = section[:section_steps][step_number - 1]
+         display_step(step_description, step_number)
+         puts "Press enter for next step. Type 'exit' to quit."
+         input = gets.strip.downcase
+     end
 
   end
 
