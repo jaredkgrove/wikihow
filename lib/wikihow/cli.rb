@@ -82,6 +82,7 @@ class Wikihow::CLI
         input = gets.strip.downcase
         if input.to_i > 0 && input.to_i <= topic.sections.count
           display_section(topic.sections[input.to_i - 1])
+          list_sections(topic)
         elsif input == "topic"
           list_topics(topic.category)
           topics_menu(topic.category)
@@ -100,14 +101,16 @@ class Wikihow::CLI
      input = nil
      while input != "exit" && step_number <= section[:section_steps].count
          step_description = section[:section_steps][step_number - 1]
-         display_step(step_description, step_number)
+         list_step(step_description, step_number)
          puts "Press enter for next step. Type 'exit' to quit."
          input = gets.strip.downcase
+         puts "Those are all the steps!" if step_number = section[:section_steps].count
+         step_number += 1
      end
 
   end
 
-  def display_step(step_description, step_number)
+  def list_step(step_description, step_number)
     step_description.each do |layer_1|
       (layer_1.is_a? Array) ? display_first_layer_list(layer_1) : puts("\n#{step_number}. #{layer_1}")
     end
