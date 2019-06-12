@@ -68,7 +68,6 @@ class Wikihow::CLI
     if topic.sections.count == 1
       #display_section(topic.sections[0])
     else
-      puts "Enter the number of the method you'd like to learn about."
       topic.sections.each.with_index(1) {|section, i|puts "#{i}. #{section[:section_title]}"}
     end
   end
@@ -77,9 +76,16 @@ class Wikihow::CLI
     if topic.sections.count == 1
       display_section(topic.sections[0])
     else
-      input = gets.strip.downcase
-      if input.to_i > 0 && input.to_i <= topic.sections.count
-        display_section(topic.sections[input.to_i - 1])
+      while input != "exit"
+        puts "Enter the number of the method you'd like to learn about. Type 'topic' to return to Topics menu. Type 'exit' to quit"
+        input = gets.strip.downcase
+        if input.to_i > 0 && input.to_i <= topic.sections.count
+          display_section(topic.sections[input.to_i - 1])
+        elsif input == "topic"
+          list_topics(topic.category)
+          topics_menu(topic.category)
+          input = 'exit'
+        end
       end
     end
   end
