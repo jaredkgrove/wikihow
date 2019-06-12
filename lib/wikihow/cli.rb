@@ -72,15 +72,25 @@ class Wikihow::CLI
   end
 
   def display_section(section)
-    topic.sections[input.to_i - 1][:section_steps].each do |step_description|
-      display_step(step_description)
+    section[:section_steps].each.with_index(1) do |step_description, step_number|
+      display_step(step_description, step_number)
     end
   end
 
-  def display_step(step_description)
+  def display_step(step_description, step_number)
     step_description.each do |layer_1|
-      puts layer_1 unless layer_1.is_a? Array
+      (layer_1.is_a? Array) ? display_first_layer_list(layer_1) : puts("\n#{step_number}. #{layer_1}")
     end
+  end
+
+  def display_first_layer_list(layer_1)
+    layer_1.each do |layer_2|
+      (layer_2.is_a? Array) ? display_second_layer_list(layer_2) : puts(%q"\n#{layer_2}\n")
+    end
+  end
+
+  def display_second_layer_list(layer_2)
+
   end
 
   def good_bye
