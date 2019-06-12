@@ -29,25 +29,25 @@ class Wikihow::Topic
     doc = Nokogiri::HTML(open(self.url))
 
     self.intro = doc.search("#intro p").last.text
-    self.sections = []
+    sections_array = []
     doc.search("#intro #method_toc .toc_method").each do |method|
-      self.sections << {:section_title => method.text, :section_steps => []}
+      sections_array << {:section_title => method.text, :section_steps => []}
     end
 
-    self.sections.each.with_index do |section, i|
+    sections_array.each.with_index do |section, i|
       doc.search(".steps_list_2")[i].search(".step").each do |section_li|
-        step_description = [section_li.search("> text()").text.strip]
+        step_description = [section_li.search(".whb").text.strip + " " + section_li.search("> text()").text.strip]
         section_li.search("> ul > li").each do |step_li|
           bullet_point = [step_li.search("> text()").text.strip]
           sub_bullet_point = step_li.search("> ul > li").collect {|bullet_point_li|bullet_point_li.search("> text()").text.strip}
           bullet_point << sub_bullet_point if sub_bullet_point !=[]
-          step_description << bullet_point if bullet_point != []#[step_li.search("> text()").text.strip]
+          step_description << bullet_point if bullet_point != []
         end
         section[:section_steps] << step_description
       end
     end
     binding.pry
-    section_array
+    sections_array
   end
 
   def self.sentence_to_snake_case(string)
