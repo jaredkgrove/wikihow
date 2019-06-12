@@ -121,13 +121,13 @@ class Wikihow::CLI
 
   def display_first_layer_list(layer_1)
     layer_1.each do |layer_2|
-      (layer_2.is_a? Array) ? display_second_layer_list(layer_2) : puts("\n >#{color_text(layer_2,@@green)}\n")
+      (layer_2.is_a? Array) ? display_second_layer_list(layer_2) : puts("\n#{color_text(" > #{layer_2}",@@green)}\n")
     end
   end
 
   def display_second_layer_list(layer_2)
     layer_2.each do |layer_3|
-      puts("\n    >>#{color_text(layer_3,@@blue)}\n")
+      puts("\n#{color_text("    >> #{layer_3}",@@blue)}\n")
     end
   end
 
