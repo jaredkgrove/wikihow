@@ -64,12 +64,13 @@ class Wikihow::CLI
 
   def dislplay_topic(topic)
     puts "Enter the number of the method you'd like to learn about."
-    topic.sections.each.with_index(1) do |section, i|
-      puts "#{i}. #{section[:section_title]}"
-    end
+    topic.sections.each.with_index(1) {|section, i|puts "#{i}. #{section[:section_title]}"}
     input = gets.strip.downcase
     if input.to_i > 0 && input.to_i <= topic.sections.count
-      puts "hello"
+      topic.sections[input.to_i - 1][:section_steps].each do |step_description|
+        puts step_description
+        puts " "
+      end
     end
   end
 
