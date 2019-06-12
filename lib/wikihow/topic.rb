@@ -5,7 +5,7 @@ class Wikihow::Topic
     self.title = topic_hash[:title] if topic_hash != nil
     self.url = topic_hash[:url] if topic_hash != nil
     self.category = category if category != nil
-    self.sections = nil
+    self.sections = []
     @steps = []
   end
 
@@ -15,7 +15,7 @@ class Wikihow::Topic
   end
 
   def sections
-    if @sections == nil
+    if @sections == []
       @sections = self.scrape_topic
     end
     @sections
@@ -46,7 +46,6 @@ class Wikihow::Topic
         section[:section_steps] << step_description
       end
     end
-    binding.pry
     sections_array
   end
 

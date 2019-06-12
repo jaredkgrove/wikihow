@@ -50,8 +50,8 @@ class Wikihow::CLI
     while input != "exit"
       puts "Enter the number of the topic that you'd like to learn how to do. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit."
       input = gets.strip.downcase
-      if input.to_i > 0 && input.to_i <= @topics.count
-          dislplay_topic(@topics[input.to_i - 1])
+      if input.to_i > 0 && input.to_i <= category.topics.count
+          dislplay_topic(category.topics[input.to_i - 1])
       elsif input == "next"
           display_index = list_topics(category, display_index)
       elsif input == "cat"
@@ -63,8 +63,14 @@ class Wikihow::CLI
   end
 
   def dislplay_topic(topic)
-
-    puts topic.sections
+    puts "Enter the number of the method you'd like to learn about."
+    topic.sections.each.with_index(1) do |section, i|
+      puts "#{i}. #{section[:section_title]}"
+    end
+    input = gets.strip.downcase
+    if input.to_i > 0 && input.to_i <= topic.sections.count
+      puts "hello"
+    end
   end
 
   def good_bye
