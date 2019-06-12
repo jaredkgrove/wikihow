@@ -51,7 +51,7 @@ class Wikihow::CLI
       puts "Enter the number of the topic that you'd like to learn how to do. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit."
       input = gets.strip.downcase
       if input.to_i > 0 && input.to_i <= category.topics.count
-          dislplay_topic(category.topics[input.to_i - 1])
+          sections_menu(category.topics[input.to_i - 1])
       elsif input == "next"
           display_index = list_topics(category, display_index)
       elsif input == "cat"
@@ -62,15 +62,24 @@ class Wikihow::CLI
     end
   end
 
-  def dislplay_topic(topic)
+  def sections_menu(topic)
     puts "Enter the number of the method you'd like to learn about."
     topic.sections.each.with_index(1) {|section, i|puts "#{i}. #{section[:section_title]}"}
     input = gets.strip.downcase
     if input.to_i > 0 && input.to_i <= topic.sections.count
-      topic.sections[input.to_i - 1][:section_steps].each do |step_description|
-        puts step_description
-        puts " "
-      end
+      display_section(topic.sections[input.to_i - 1])
+    end
+  end
+
+  def display_section(section)
+    topic.sections[input.to_i - 1][:section_steps].each do |step_description|
+      display_step(step_description)
+    end
+  end
+
+  def display_step(step_description)
+    step_description.each do |layer_1|
+      puts layer_1 unless layer_1.is_a? Array
     end
   end
 
