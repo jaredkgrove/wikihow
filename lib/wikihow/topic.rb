@@ -35,16 +35,14 @@ class Wikihow::Topic
     end
 
     self.sections.each.with_index do |section, i|
-      doc.search(".steps_list_2")[i].search(".step > text()").each do |section_li|
-        main_description = section_li.text.strip
-        section[:section_steps] << main_description
-
-
-        doc.search(".steps_list_2")[i].search(".step > ul > li").each do |step_li|
-          step_description = [step_li.css("> text()").text.strip]
-
-          section[:section_steps] << step_description
+      doc.search(".steps_list_2")[i].search(".step").each do |section_li|
+        step_description = [section_li.search("> text()").text.strip]
+        section_li.search("> ul > li").each do |step_li|
+          bullet_point = [step_li.search("> text()").text.strip]
+          step_li.search("> ul > li").each {|bullet_point_li|bullet_point << [bullet_point_li.search("> text()").text.strip]}
+          step_description << bullet_point#[step_li.search("> text()").text.strip]
         end
+        section[:section_steps] << step_description
       end
     end
     binding.pry
