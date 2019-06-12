@@ -64,7 +64,7 @@ class Wikihow::CLI
 
   def dislplay_topic(topic)
 
-    puts topic.steps
+    puts topic.sections
   end
 
   def good_bye

@@ -5,6 +5,7 @@ class Wikihow::Topic
     self.title = topic_hash[:title] if topic_hash != nil
     self.url = topic_hash[:url] if topic_hash != nil
     self.category = category if category != nil
+    self.sections = nil
     @steps = []
   end
 
@@ -13,40 +14,37 @@ class Wikihow::Topic
     category.add_topic(self)
   end
 
-  def steps
-    if @steps == []
-      @steps = self.scrape_topic
+  def sections
+    if @sections == nil
+      @sections = self.scrape_topic
     end
-    @steps
+    @sections
   end
 
-  def steps=(steps)
-    @steps = steps
+  def sections=(sections)
+    @sections = sections
   end
 
   def scrape_topic
     doc = Nokogiri::HTML(open(self.url))
-    #sections_hash = {sectionname1=>{stepname=>steptext}
-    section_array = []
+
     self.intro = doc.search("#intro p").last.text
-
+    self.sections = []
     doc.search("#intro #method_toc .toc_method").each do |method|
-      section_array << {:title => method.text}
+      self.sections << {:section_title => method.text, :section_steps => []}
     end
-#[{:title=>method_title,:steps=>[]}]
-     section_array.each.with_index do |section, i|
-       main_description = doc.search(".steps_list_2")[i].search(".step").first.text
-       steps_list = doc.search(".steps_list_2")[0].search(".step > ul > li")
 
-       test = steps_list.css("> text()").collect do |step_li|
-            step_li.text.strip
-      #     #first_layer_list = step_li.text
-      #     #step_li.search("li")
-       end
+    self.secions.each.with_index do |section, i|
+      main_description = doc.search(".steps_list_2")[i].search(".step").first.text
+      section[:section_steps] << main_description
 
-      binding.pry
-      #section_array[i]["step_#{i + 1}".to_sym] = {:step_description=>doc.search(".steps_list_2")[i].search(".step").first.text}
+
+      doc.search(".steps_list_2").search(".step > ul > li").each do |step_li|
+        step_description = [step_li.css("> text()").text.strip]
+
+        section[:section_steps] << step_description
       end
+    end
 
     section_array
   end
