@@ -1,5 +1,5 @@
 class Wikihow::Topic
-  attr_accessor :url, :title, :intro
+  attr_accessor :url, :title, :intro, :author#TODO
   attr_reader :category
   def initialize(topic_hash = nil, category = nil)
     self.title = topic_hash[:title] if topic_hash != nil
@@ -27,12 +27,28 @@ class Wikihow::Topic
   def scrape_topic
     doc = Nokogiri::HTML(open(self.url))
     #sections_hash = {sectionname1=>{stepname=>steptext}
-    steps_array = []
-    binding.pry
+    section_array = []
+    self.intro = doc.search("#intro p").last.text
+
     doc.search("#intro #method_toc .toc_method").each do |method|
-      steps_array << {}
+      section_array << {:title => method.text}
     end
-    sections_hash
+#[{:title=>method_title,:steps=>[]}]
+     section_array.each.with_index do |section, i|
+       main_description = doc.search(".steps_list_2")[i].search(".step").first.text
+       steps_list = doc.search(".steps_list_2")[0].search(".step > ul > li")
+
+       test = steps_list.css("> text()").collect do |step_li|
+            step_li.text.strip
+      #     #first_layer_list = step_li.text
+      #     #step_li.search("li")
+       end
+
+      binding.pry
+      #section_array[i]["step_#{i + 1}".to_sym] = {:step_description=>doc.search(".steps_list_2")[i].search(".step").first.text}
+      end
+
+    section_array
   end
 
   def self.sentence_to_snake_case(string)
