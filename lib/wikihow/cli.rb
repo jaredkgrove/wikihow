@@ -85,7 +85,7 @@ class Wikihow::CLI
 
   def display_first_layer_list(layer_1)
     layer_1.each do |layer_2|
-      (layer_2.is_a? Array) ? display_second_layer_list(layer_2) : puts(%q"\n#{layer_2}\n")
+      (layer_2.is_a? Array) ? display_second_layer_list(layer_2) : puts("\n\e[#{31}m#{self}\e[0m #{layer_2}\n")
     end
   end
 
