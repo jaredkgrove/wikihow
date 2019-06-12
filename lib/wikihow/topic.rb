@@ -39,8 +39,9 @@ class Wikihow::Topic
         step_description = [section_li.search("> text()").text.strip]
         section_li.search("> ul > li").each do |step_li|
           bullet_point = [step_li.search("> text()").text.strip]
-          step_li.search("> ul > li").each {|bullet_point_li|bullet_point << [bullet_point_li.search("> text()").text.strip]}
-          step_description << bullet_point#[step_li.search("> text()").text.strip]
+          sub_bullet_point = step_li.search("> ul > li").collect {|bullet_point_li|bullet_point_li.search("> text()").text.strip}
+          bullet_point << sub_bullet_point if sub_bullet_point !=[]
+          step_description << bullet_point if bullet_point != []#[step_li.search("> text()").text.strip]
         end
         section[:section_steps] << step_description
       end
