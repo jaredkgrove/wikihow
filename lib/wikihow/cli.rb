@@ -4,10 +4,10 @@ class Wikihow::CLI
   @@green = 32
   @@yellow = 33
   @@blue = 34
-  @@white = 37
+  @@cyan = 36
 
   def call
-    puts white_text("Welcome to Wikihow")
+    puts cyan_text("Welcome to Wikihow")
     list_categories
     categories_menu
     good_bye
@@ -15,23 +15,22 @@ class Wikihow::CLI
 
   def list_categories
     @categories = Wikihow::Category.get_or_create_categories
-    @categories.each.with_index(1) {|category, i| puts red_text("#{i}. #{category.title}")}
+    @categories.each.with_index(1) {|category, i| puts yellow_text("#{i}. #{category.title}")}
   end
 
   def categories_menu
     input = nil
     while input != "exit"
-      puts white_text("Enter the number of the category that you'd like to learn about. Type 'list' to display categories. Type 'exit' to close.")
+      puts cyan_text("Enter the number of the category that you'd like to learn about. Type 'list' to display categories. Type 'exit' to close.")
       input = gets.strip.downcase
       if input.to_i > 0 && input.to_i <= @categories.count
         category = @categories[input.to_i - 1]
         display_index = list_topics(category)
-        topics_menu(category, display_index)
-        input = "exit"
+        input = topics_menu(category, display_index)
       elsif input == "list"
         list_categories
       else
-        puts "Please enter a valid command."
+        puts red_text("Please enter a valid command.")
       end
     end
   end
@@ -42,37 +41,41 @@ class Wikihow::CLI
       @topics[display_index..display_index + 9].each.with_index(display_index + 1) {|topic, i| puts blue_text("#{i}. #{topic.title}")}
       display_index + 10
     else
-      puts "Those are all the topics for this category. Here are the first ten topic for the category."
+      puts cyan_text("Those are all the topics for this category. Here are the first ten topic for the category.")
       list_topics(category)
     end
   end
 
   def topics_menu(category, display_index = 9)
     input = nil
-    puts "Enter the number of the topic that you'd like to learn about. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit."
+    puts cyan_text("Enter the number of the topic that you'd like to learn about. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit.")
     input = gets.strip.downcase
     if input.to_i > 0 && input.to_i <= category.topics.count
       topic = category.topics[input.to_i - 1]
       list_sections(topic)
       sections_menu(topic)
-      input = 'exit'
     elsif input == "next"
       display_index = list_topics(category, display_index)
       topics_menu(category, display_index)
     elsif input == "cat"
       list_categories
       categories_menu
-      input = "exit"
+    elsif input == "exit"
+      input
+    else
+      puts red_text("Please enter a valid command.")
+      topics_menu(category, display_index)
     end
   end
 
   def list_sections(topic)
     if topic.sections.count == 1
-      puts "How to #{topic.title}"
-      puts topic.intro
+      puts blue_text("How to #{topic.title}".upcase)
+      puts blue_text(topic.intro)
     else
-      puts topic.intro
-      topic.sections.each.with_index(1) {|section, i|puts green_text("#{i}. #{section[:section_title]}")}
+      puts blue_text("How to #{topic.title}".upcase)
+      puts blue_text(topic.intro)
+      topic.sections.each.with_index(1) {|section, i|puts yellow_text("#{i}. #{section[:section_title]}")}
     end
   end
 
@@ -83,7 +86,7 @@ class Wikihow::CLI
       topics_menu(topic.category)
     else
       input = nil
-      puts "Enter the number of the section/method you'd like to learn about. Type 'topic' to return to Topics menu. Type 'exit' to quit"
+      puts cyan_text("Enter the number of the section/method you'd like to learn about. Type 'topic' to return to Topics menu. Type 'exit' to quit")
       input = gets.strip.downcase
       if input.to_i > 0 && input.to_i <= topic.sections.count
         display_section(topic.sections[input.to_i - 1])
@@ -95,6 +98,7 @@ class Wikihow::CLI
       elsif input == "exit"
         input
       else
+        puts red_text("Please enter a valid command.")
         sections_menu(topic)
       end
     end
@@ -154,8 +158,8 @@ class Wikihow::CLI
     color_text(string, @@yellow)
   end
 
-  def white_text(string)
-    color_text(string, @@white)
+  def cyan_text(string)
+    color_text(string, @@cyan)
   end
 
   def color_text(string, color)
