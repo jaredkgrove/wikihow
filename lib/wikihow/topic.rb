@@ -48,13 +48,13 @@ class Wikihow::Topic
     sections_array
   end
 
-  def self.sentence_to_snake_case(string)
-    string.gsub(" ","_")
-  end
-
-  def self.snake_case_to_sentence(string)
-    string.gsub("_"," ")
-  end
+  # def self.sentence_to_snake_case(string)
+  #   string.gsub(" ","_")
+  # end
+  #
+  # def self.snake_case_to_sentence(string)
+  #   string.gsub("_"," ")
+  # end
 
   def self.get_or_create_topics_from_category(category)
     if category.topics == []
