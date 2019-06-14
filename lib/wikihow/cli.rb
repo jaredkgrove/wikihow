@@ -7,7 +7,7 @@ class Wikihow::CLI
   @@cyan = 36
 
   def call
-    puts cyan_text("Welcome to Wikihow")
+    puts cyan_text("Welcome to Wikihow!")
     list_categories
     categories_menu
   end
@@ -105,22 +105,17 @@ class Wikihow::CLI
   end
 
   def display_section(section, step_number = 1)
-     #step_number = 1
-     #input = nil
-     #while input != "topic" && step_number <= section[:section_steps].count
-       step_description = section[:section_steps][step_number - 1]
-       list_step(step_description, step_number)
-       if step_number == section[:section_steps].count
-         puts "Those are all the steps!"
-       else
-         puts "Press enter for next step. Type 'topic' to return to menu."
-         input = gets.strip.downcase
-         if input != "topic"
-          display_section(section, step_number + 1)
-         end
-       end
-       #step_number += 1
-     #end
+    step_description = section[:section_steps][step_number - 1]
+    list_step(step_description, step_number)
+    if step_number == section[:section_steps].count
+      puts "Those are all the steps!"
+    else
+      puts "Press enter for next step. Type 'topic' to return to menu."
+      input = gets.strip.downcase
+      if input != "topic"
+        display_section(section, step_number + 1)
+      end
+    end
   end
 
   def list_step(step_description, step_number)
