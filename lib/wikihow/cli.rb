@@ -10,7 +10,6 @@ class Wikihow::CLI
     puts cyan_text("Welcome to Wikihow")
     list_categories
     categories_menu
-    good_bye
   end
 
   def list_categories
@@ -20,18 +19,19 @@ class Wikihow::CLI
 
   def categories_menu
     input = nil
-    while input != "exit"
-      puts cyan_text("Enter the number of the category that you'd like to learn about. Type 'list' to display categories. Type 'exit' to close.")
-      input = gets.strip.downcase
-      if input.to_i > 0 && input.to_i <= @categories.count
-        category = @categories[input.to_i - 1]
-        display_index = list_topics(category)
-        input = topics_menu(category, display_index)
-      elsif input == "list"
-        list_categories
-      else
-        puts red_text("Please enter a valid command.")
-      end
+    puts cyan_text("Enter the number of the category that you'd like to learn about. Type 'exit' to close.")
+    input = gets.strip.downcase
+    if input.to_i > 0 && input.to_i <= @categories.count
+      category = @categories[input.to_i - 1]
+      display_index = list_topics(category)
+      #input = topics_menu(category, display_index)
+      topics_menu(category, display_index)
+    elsif input == "exit"
+      good_bye
+    else
+      list_categories
+      puts red_text("Please enter a valid command.")
+      categories_menu
     end
   end
 
@@ -61,7 +61,7 @@ class Wikihow::CLI
       list_categories
       categories_menu
     elsif input == "exit"
-      input
+      good_bye
     else
       puts red_text("Please enter a valid command.")
       topics_menu(category, display_index)
@@ -86,17 +86,17 @@ class Wikihow::CLI
       topics_menu(topic.category)
     else
       input = nil
-      puts cyan_text("Enter the number of the section/method you'd like to learn about. Type 'topic' to return to Topics menu. Type 'exit' to quit")
+      puts cyan_text("Enter the number of the section/method you'd like to learn about. Type 'topics' to return to Topics menu. Type 'exit' to quit")
       input = gets.strip.downcase
       if input.to_i > 0 && input.to_i <= topic.sections.count
         display_section(topic.sections[input.to_i - 1])
         list_sections(topic)
         sections_menu(topic)
-      elsif input == "topic"
+      elsif input == "topics"
         list_topics(topic.category)
         topics_menu(topic.category)
       elsif input == "exit"
-        input
+        good_bye
       else
         puts red_text("Please enter a valid command.")
         sections_menu(topic)
@@ -104,10 +104,10 @@ class Wikihow::CLI
     end
   end
 
-  def display_section(section)
-     step_number = 1
-     input = nil
-     while input != "topic" && step_number <= section[:section_steps].count
+  def display_section(section, step_number = 1)
+     #step_number = 1
+     #input = nil
+     #while input != "topic" && step_number <= section[:section_steps].count
        step_description = section[:section_steps][step_number - 1]
        list_step(step_description, step_number)
        if step_number == section[:section_steps].count
@@ -115,9 +115,12 @@ class Wikihow::CLI
        else
          puts "Press enter for next step. Type 'topic' to return to menu."
          input = gets.strip.downcase
-      end
-       step_number += 1
-     end
+         if input != "topic"
+          display_section(section, step_number + 1)
+         end
+       end
+       #step_number += 1
+     #end
   end
 
   def list_step(step_description, step_number)

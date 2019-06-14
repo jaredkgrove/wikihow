@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+puts "hello"
 set -euo pipefail
 IFS=$'\n\t'
 set -vx
