@@ -7,7 +7,7 @@ class Wikihow::CLI
   @@cyan = 36
 
   def call
-    puts cyan_text("Welcome to Wikihow!")
+    puts "WELCOME TO WIKIHOW!"
     list_categories
     categories_menu
   end
@@ -19,12 +19,11 @@ class Wikihow::CLI
 
   def categories_menu
     input = nil
-    puts cyan_text("Enter the number of the category that you'd like to learn about. Type 'exit' to close.")
+    puts "Enter the number of the category that you'd like to learn about. Type 'exit' to close."
     input = gets.strip.downcase
     if input.to_i > 0 && input.to_i <= @categories.count
       category = @categories[input.to_i - 1]
       display_index = list_topics(category)
-      #input = topics_menu(category, display_index)
       topics_menu(category, display_index)
     elsif input == "exit"
       good_bye
@@ -41,14 +40,14 @@ class Wikihow::CLI
       @topics[display_index..display_index + 9].each.with_index(display_index + 1) {|topic, i| puts blue_text("#{i}. #{topic.title}")}
       display_index + 10
     else
-      puts cyan_text("Those are all the topics for this category. Here are the first ten topic for the category.")
+      puts "Those are all the topics for this category. Here are the first ten topics for the category."
       list_topics(category)
     end
   end
 
-  def topics_menu(category, display_index = 9)
+  def topics_menu(category, display_index = 10)
     input = nil
-    puts cyan_text("Enter the number of the topic that you'd like to learn about. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit.")
+    puts "Enter the number of the topic that you'd like to learn about. Type 'next' to display the next 10 topics. Type 'cat' to return to categories menu. Type 'exit' to quit."
     input = gets.strip.downcase
     if input.to_i > 0 && input.to_i <= category.topics.count
       topic = category.topics[input.to_i - 1]
@@ -70,10 +69,10 @@ class Wikihow::CLI
 
   def list_sections(topic)
     if topic.sections.count == 1
-      puts blue_text("How to #{topic.title}".upcase)
+      puts blue_text("\nHow to #{topic.title}".upcase)
       puts blue_text(topic.intro)
     else
-      puts blue_text("How to #{topic.title}".upcase)
+      puts blue_text("\nHow to #{topic.title}".upcase)
       puts blue_text(topic.intro)
       topic.sections.each.with_index(1) {|section, i|puts yellow_text("#{i}. #{section[:section_title]}")}
     end
@@ -86,7 +85,7 @@ class Wikihow::CLI
       topics_menu(topic.category)
     else
       input = nil
-      puts cyan_text("Enter the number of the section/method you'd like to learn about. Type 'topics' to return to Topics menu. Type 'exit' to quit")
+      puts "Enter the number of the section/method you'd like to learn about. Type 'topics' to return to Topics menu. Type 'exit' to quit"
       input = gets.strip.downcase
       if input.to_i > 0 && input.to_i <= topic.sections.count
         display_section(topic.sections[input.to_i - 1])
@@ -108,7 +107,8 @@ class Wikihow::CLI
     step_description = section[:section_steps][step_number - 1]
     list_step(step_description, step_number)
     if step_number == section[:section_steps].count
-      puts "Those are all the steps!"
+      puts "Those are all the steps! Press Enter to continue"
+      gets
     else
       puts "Press enter for next step. Type 'topic' to return to menu."
       input = gets.strip.downcase
