@@ -31,7 +31,7 @@ class Wikihow::Scraper
     end
 
     sections_array.each.with_index do |section, i|
-      doc.search(".steps_list_2")[i].search(".step").each do |section_li|
+      doc.search(".steps")[i].search(".step").each do |section_li|
         step_description = [section_li.search(".whb").text.strip + " " + section_li.search("> text()").text.strip]
         section_li.search("> ul > li").each do |step_li|
           bullet_point = [step_li.search("> text(), a").text.strip]
@@ -40,6 +40,10 @@ class Wikihow::Scraper
           step_description << bullet_point if bullet_point != []
         end
         section[:section_steps] << step_description
+      end
+
+      if doc.search(".steps")[i].search(".step").empty?
+         section[:section_steps] << ["There is no text description for this section"]
       end
     end
     sections_array
